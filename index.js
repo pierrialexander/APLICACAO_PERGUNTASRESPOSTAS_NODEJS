@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser')
 const connections = require('./database/database')
+const Pergunta = require('./database/Pergunta')
 
 // Database 
 connections
@@ -32,15 +33,18 @@ app.get("/perguntar", (req, res) => {
   res.render("perguntar")
 })
 
+// ROTA que recebe os dados do formulario
 app.post('/salvarpergunta', (req, res) => {
   var titulo = req.body.titulo
   var descricao = req.body.descricao
-  res.send(`Dados Recebidos!<br>
-  -------------------------------<br>
-  Titulo: ${titulo}<br>
-  -------------------------------<br>
-  Descricao: ${descricao}<br>
-  `)
+
+  // Pegamos o model e damos um CREATE (insert do sql)
+  Pergunta.create({
+    titulo: titulo,
+    descricao: descricao
+  }).then(() => {
+    res.redirect("/");
+  })
 })
 
 app.listen(8081, () => {
