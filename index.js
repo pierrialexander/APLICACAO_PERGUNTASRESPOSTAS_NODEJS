@@ -25,20 +25,32 @@ app.use(bodyParser.json()); // permite ler dados enviados via JSON (API)
 
 //---------- ROTAS
 
+// Rota da Index
 app.get('/', (req, res) => {
-  res.render("index")
+  // Equivalente ao SELECT * ALL do SQL, passando apenas uma pesquisa crua
+  Pergunta.findAll({ raw: true }).then((perguntas) => {
+    res.render("index", {
+      perguntas: perguntas
+    })
+  })
+  
 })
 
+
+// Roda do Formulario de pergunta
 app.get("/perguntar", (req, res) => {
   res.render("perguntar")
 })
+
 
 // ROTA que recebe os dados do formulario
 app.post('/salvarpergunta', (req, res) => {
   var titulo = req.body.titulo
   var descricao = req.body.descricao
 
+
   // Pegamos o model e damos um CREATE (insert do sql)
+  // Salvando perguntas no banco de dados
   Pergunta.create({
     titulo: titulo,
     descricao: descricao
