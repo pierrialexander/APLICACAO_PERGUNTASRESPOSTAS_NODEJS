@@ -3,6 +3,7 @@ const app = express();
 const bodyParser = require('body-parser')
 const connections = require('./database/database')
 const Pergunta = require('./database/Pergunta')
+const Resposta = require('./database/Resposta')
 
 // Database 
 connections
