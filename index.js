@@ -28,7 +28,9 @@ app.use(bodyParser.json()); // permite ler dados enviados via JSON (API)
 // Rota da Index
 app.get('/', (req, res) => {
   // Equivalente ao SELECT * ALL do SQL, passando apenas uma pesquisa crua
-  Pergunta.findAll({ raw: true }).then((perguntas) => {
+  Pergunta.findAll({ raw: true, order: [
+    ['id','DESC'] // ASC = Crescente || DESC = Decrescente
+  ] }).then((perguntas) => {
     res.render("index", {
       perguntas: perguntas
     })
@@ -56,6 +58,21 @@ app.post('/salvarpergunta', (req, res) => {
     descricao: descricao
   }).then(() => {
     res.redirect("/");
+  })
+})
+
+app.get("/pergunta/:id", (req, res) => {
+  var id = req.params.id
+  Pergunta.findOne({ // igual o Select * where... do SQL
+    where: {id: id}
+  }).then((pergunta) => {
+      if (pergunta != undefined) { // Pergunta encontrada
+        res.render("pergunta", {
+          pergunta: pergunta
+        })
+      }else{
+        res.redirect("/")
+      }
   })
 })
 
