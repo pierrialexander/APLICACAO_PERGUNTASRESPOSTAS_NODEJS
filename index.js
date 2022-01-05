@@ -69,9 +69,20 @@ app.get("/pergunta/:id", (req, res) => {
     where: {id: id}
   }).then((pergunta) => {
       if (pergunta != undefined) { // Pergunta encontrada
-        res.render("pergunta", {
-          pergunta: pergunta
+
+        // busca todas as respostas da pergunta
+        Resposta.findAll({ 
+          where: {perguntaId: pergunta.id}, 
+          order: [ 
+            ['id','DESC'] // ASC = Crescente || DESC = Decrescente
+          ]}).then((respostas) => {
+          res.render("pergunta", {
+            pergunta: pergunta,
+            respostas: respostas
+          })
         })
+
+        
       }else{
         res.redirect("/")
       }
@@ -91,5 +102,5 @@ app.post("/responder", (req, res) => {
 })
 
 app.listen(8081, () => {
-  console.log('Server listening on port 8085')
+  console.log('Server listening on port 8081')
 })
